@@ -15,6 +15,17 @@ import (
 * See https://github.com/keptn/spec/blob/0.8.0-alpha/cloudevents.md for details on the payload
 **/
 
+func HandleIntelligentScaleupEvent(myKeptn *keptnv2.Keptn, incomingEvent cloudevents.Event, data *keptnv2.ActionTriggeredEventData) error {
+	log.Printf("Handling keptn-intelligent-scaleup.triggered Event: %s", incomingEvent.Context.GetID())
+
+	log.Printf("DATA: %s", data.Problem)
+	log.Printf("DATA: %t", data.Problem)
+	log.Printf("DATA: %v", data.Problem)
+	log.Printf("CloudEvent %T: %v", data, data)
+
+	return nil
+}
+
 // GenericLogKeptnCloudEventHandler is a generic handler for Keptn Cloud Events that logs the CloudEvent
 func GenericLogKeptnCloudEventHandler(myKeptn *keptnv2.Keptn, incomingEvent cloudevents.Event, data interface{}) error {
 	log.Printf("Handling %s Event: %s", incomingEvent.Type(), incomingEvent.Context.GetID())
@@ -79,7 +90,7 @@ func HandleReleaseTriggeredEvent(myKeptn *keptnv2.Keptn, incomingEvent cloudeven
 	return nil
 }
 
-// HandleGetSliTriggeredEvent handles get-sli.triggered events if SLIProvider == keptn-service-template-go
+// HandleGetSliTriggeredEvent handles get-sli.triggered events if SLIProvider == keptn-intelligent-scaleup
 // This function acts as an example showing how to handle get-sli events by sending .started and .finished events
 // TODO: adapt handler code to your needs
 func HandleGetSliTriggeredEvent(myKeptn *keptnv2.Keptn, incomingEvent cloudevents.Event, data *keptnv2.GetSLITriggeredEventData) error {
@@ -87,7 +98,7 @@ func HandleGetSliTriggeredEvent(myKeptn *keptnv2.Keptn, incomingEvent cloudevent
 
 	// Step 1 - Do we need to do something?
 	// Lets make sure we are only processing an event that really belongs to our SLI Provider
-	if data.GetSLI.SLIProvider != "keptn-service-template-go" {
+	if data.GetSLI.SLIProvider != "keptn-intelligent-scaleup" {
 		log.Printf("Not handling get-sli event as it is meant for %s", data.GetSLI.SLIProvider)
 		return nil
 	}
@@ -113,9 +124,9 @@ func HandleGetSliTriggeredEvent(myKeptn *keptnv2.Keptn, incomingEvent cloudevent
 	testRunID := labels["testRunId"]
 
 	// Step 5 - get SLI Config File
-	// Get SLI File from keptn-service-template-go subdirectory of the config repo - to add the file use:
-	//   keptn add-resource --project=PROJECT --stage=STAGE --service=SERVICE --resource=my-sli-config.yaml  --resourceUri=keptn-service-template-go/sli.yaml
-	sliFile := "keptn-service-template-go/sli.yaml"
+	// Get SLI File from keptn-intelligent-scaleup subdirectory of the config repo - to add the file use:
+	//   keptn add-resource --project=PROJECT --stage=STAGE --service=SERVICE --resource=my-sli-config.yaml  --resourceUri=keptn-intelligent-scaleup/sli.yaml
+	sliFile := "keptn-intelligent-scaleup/sli.yaml"
 	sliConfigFileContent, err := myKeptn.GetKeptnResource(sliFile)
 
 	// FYI you do not need to "fail" if sli.yaml is missing, you can also assume smart defaults like we do
